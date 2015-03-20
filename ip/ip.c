@@ -37,6 +37,7 @@ int force = 0;
 int max_flush_loops = 10;
 int batch_mode = 0;
 bool do_all = false;
+bool require_ifconfig_compat = true;
 
 struct rtnl_handle rth = { .fd = -1 };
 
@@ -246,6 +247,7 @@ int main(int argc, char **argv)
 			exit(0);
 		} else if (matches(opt, "-force") == 0) {
 			++force;
+                        require_ifconfig_compat = false;
 		} else if (matches(opt, "-batch") == 0) {
 			argc--;
 			argv++;

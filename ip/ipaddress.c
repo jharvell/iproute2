@@ -1691,7 +1691,7 @@ static int ipaddr_modify(int cmd, int flags, int argc, char **argv)
 		fprintf(stderr, "Not enough information: \"dev\" argument is required.\n");
 		return -1;
 	}
-	if (l && matches(d, l) != 0) {
+	if (require_ifconfig_compat && l && matches(d, l) != 0) {
 		fprintf(stderr, "\"dev\" (%s) must match \"label\" (%s).\n", d, l);
 		return -1;
 	}

@@ -25,6 +25,7 @@ extern char * _SL_;
 extern int max_flush_loops;
 extern int batch_mode;
 extern bool do_all;
+extern bool require_ifconfig_compat;
 
 #ifndef IPPROTO_ESP
 #define IPPROTO_ESP	50
