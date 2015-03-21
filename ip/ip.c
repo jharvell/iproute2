@@ -247,7 +247,7 @@ int main(int argc, char **argv)
 			exit(0);
 		} else if (matches(opt, "-force") == 0) {
 			++force;
-                        require_ifconfig_compat = false;
+			require_ifconfig_compat = false;
 		} else if (matches(opt, "-batch") == 0) {
 			argc--;
 			argv++;
