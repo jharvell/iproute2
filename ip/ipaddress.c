@@ -1692,13 +1692,12 @@ static int ipaddr_modify(int cmd, int flags, int argc, char **argv)
 		return -1;
 	}
         if ( require_ifconfig_compat && l) {
-            // for ifconfig compatibility, label must start with <devname><colon>
             bool isCompat = false;
             if(matches(d, l) == 0)
             {
                 size_t dLen = strlen(d);
                 size_t lLen = strlen(l);
-                isCompat = ( dLen == lLen || lLen > dLen && l[dLen] == ':' );
+                isCompat = ( dLen == lLen || ( lLen > dLen && l[dLen] == ':' ) );
             }
             if( !isCompat ) {
                 fprintf(stderr, "\"label\" (%s) must either be \"dev\" (%s) or start with \"dev\" followed by a colon (%s:).\n", l, d, d);
