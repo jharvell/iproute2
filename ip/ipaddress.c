@@ -1691,11 +1691,20 @@ static int ipaddr_modify(int cmd, int flags, int argc, char **argv)
 		fprintf(stderr, "Not enough information: \"dev\" argument is required.\n");
 		return -1;
 	}
-	if (require_ifconfig_compat && l && matches(d, l) != 0) {
-		fprintf(stderr, "\"dev\" (%s) must match \"label\" (%s).\n", d, l);
-		return -1;
-	}
-
+        if ( require_ifconfig_compat && l) {
+            // for ifconfig compatibility, label must start with <devname><colon>
+            bool isCompat = false;
+            if(matches(d, l) == 0)
+            {
+                size_t dLen = strlen(d);
+                size_t lLen = strlen(l);
+                isCompat = ( dLen == lLen || lLen > dLen && l[dLen] == ':' );
+            }
+            if( !isCompat ) {
+                fprintf(stderr, "\"label\" (%s) must either be \"dev\" (%s) or start with \"dev\" followed by a colon (%s:).\n", l, d, d);
+                return -1;
+            }
+        }
 	if (peer_len == 0 && local_len) {
 		if (cmd == RTM_DELADDR && lcl.family == AF_INET && !(lcl.flags & PREFIXLEN_SPECIFIED)) {
 			fprintf(stderr,
