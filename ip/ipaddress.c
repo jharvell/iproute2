@@ -1692,14 +1692,24 @@ static int ipaddr_modify(int cmd, int flags, int argc, char **argv)
 		return -1;
 	}
 	if ( require_ifconfig_compat && l) {
-		bool isCompat = false;
 		size_t dLen = strlen(d);
 		size_t lLen = strlen(l);
-		if(lLen >= dLen && strncmp(d, l, dLen) == 0)
-			isCompat =  (dLen == lLen || l[dLen] == ':');
-		if( !isCompat ) {
-			fprintf(stderr, "\"label\" (%s) must either be \"dev\" (%s) or start with \"dev\" followed by a colon (%s:).\n", l, d, d);
-		return -1;
+		bool acceptLabel = ( lLen >= dLen && !strncmp(d, l, dLen) );
+		bool isCompat = acceptLabel && (lLen == dLen || l[dLen] == ':');
+
+		if(!isCompat)
+		{
+			fprintf(stderr,"\"label\" (%s) is incompatible with ifconfig. "
+				"It must either be \"dev\" (%s) or start "
+				"with \"dev\" followed by a colon (%s:).\n"
+				"Use -force to accept incompatible labels.\n", l, d, d);
+
+			if(acceptLabel)
+				fprintf(stderr,"WARNING: Accepting label even though it is "
+					"not ifconfig compatible.  This label may be rejected "
+                                        "in the future unless -force is used.\n");
+			else
+				return -1;
 		}
 	}
 	if (peer_len == 0 && local_len) {
